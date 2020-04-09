@@ -66,7 +66,7 @@ class BinaryTree():
         as this will reduce the effort you need for debugging.
         '''
         if traversal_type == 'preorder':
-            return self.preorder_print(self.root, '')
+            return self.preorder_print(self.root, '') #remind me what does self.root do? Is it calling the instace tree?
         elif traversal_type == 'inorder':
             return self.inorder_print(self.root, '')
         elif traversal_type == 'postorder':
@@ -74,27 +74,29 @@ class BinaryTree():
         else:
             raise ValueError('Traversal type ' + str(traversal_type) + ' is not supported.')
 
-    def preorder_print(self, start, traversal):
-        '''
-        FIXME: 
-        Implement this function.
-        The lecture notes videos provide the exact code you need.
-        '''
+    def preorder_print(self, start, traversal): #do we have the whole tree by this point? 
+        '''Root -> left -> right'''
+        if start:
+            traversal += (str(start.value) + "-") # writing out the root value
+            traversal = self.preorder_print(start.left, traversal) #writing out the left child
+            traversal = self.preorder_print(start.right, traversal) #writing out the right child
+        return traversal
 
     def inorder_print(self, start, traversal):
-        '''
-        FIXME: 
-        Implement this function.
-        The lecture notes videos provide the exact code you need.
-        '''
+        '''Left -> root -> right'''
+        if start:
+            traversal = self.preorder_print(start.left, traversal) #writes the left child
+            traversal += (str(start.value) + "-") #writes the root
+            traversal = self.preorder_print(start.left, traversal) #writes the right child
+        return traversal
 
     def postorder_print(self, start, traversal):
-        '''
-        FIXME: 
-        Implement this function.
-        The lecture notes videos provide the exact code you need.
-        '''
-
+        '''Left -> right -> root''' 
+        if start:
+            traversal = self.preorder_print(start.left, traversal) #writes the left child
+            traversal = self.preorder_print(start.left, traversal) #writes the right child
+            traversal += (str(start.value) + "-") #writes the root
+        return traversal
 
     def to_list(self, traversal_type):
         '''
@@ -120,22 +122,28 @@ class BinaryTree():
             raise ValueError('traversal_type=' + str(traversal_type) + ' is not supported.')
 
     def preorder(self, start, traversal):
-        '''
-        FIXME:
-        Implement this function by modifying the _print functions above.
-        '''
+        '''Root -> left -> right'''
+        if start:
+            traversal.append(start.value) #adds the root
+            traversal = self.preorder(start.left, traversal) #adds the left child
+            traversal = self.preorder(start.right, traversal) #adds the right child
+        return traversal
 
     def inorder(self, start, traversal):
-        '''
-        FIXME:
-        Implement this function by modifying the _print functions above.
-        '''
+        '''Left -> Root -> right'''
+        if start:
+            traversal = self.inorder(start.left, traversal) #adds the left child
+            traversal.append(start.value) #adds the root
+            traversal = self.inorder(start.right, traversal) #adds the right child
+        return traversal
 
     def postorder(self, start, traversal):
-        '''
-        FIXME:
-        Implement this function by modifying the _print functions above.
-        '''
+        '''Left -> Right -> Root'''
+        if start:
+            traversal = self.postorder(start.left, traversal)
+            traversal = self.postorder(start.right, traversal)
+            traversal.append(start.value)
+        return traversal
 
     def __len__(self):
         '''
@@ -153,6 +161,22 @@ class BinaryTree():
         Implement this function. 
         The lecture notes videos provide the exact code you need.
         '''
+        if self.root is None:
+            return 0
+        stack = []
+        stack.push(self.root)
+
+        size = 1
+
+        while stack:
+            node = stack.pop()
+            if node.left:
+                size += 1
+                stack.push(node.left)
+            if node.right:
+                size += 1
+                stack.push(node.right)
+        return size
 
     def size_(self, node):
         '''
@@ -160,6 +184,9 @@ class BinaryTree():
         Implement this function.
         The lecture notes videos provide the exact code you need.
         '''
+        if node is None:
+            return 0
+        return 1 + self.size_(node.left) + self.size_(node.right)
 
     def height(self):
         return BinaryTree._height(self.root)
@@ -176,3 +203,9 @@ class BinaryTree():
         This makes it inconvenient to use,
         and so you should implement it as a static method.
         '''
+        if node is None:
+            return -1
+        left_height = BinaryTree._height(node.left)
+        right_height = BinaryTree._height(node.right)
+
+        return 1 + max(left_height, right_height)

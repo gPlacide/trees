@@ -74,7 +74,7 @@ class BinaryTree():
         else:
             raise ValueError('Traversal type ' + str(traversal_type) + ' is not supported.')
 
-    def preorder_print(self, start, traversal): #do we have the whole tree by this point? 
+    def preorder_print(self, start, traversal): #do we have the whole tree by this point?
         '''Root -> left -> right'''
         if start:
             traversal += (str(start.value) + "-") # writing out the root value
@@ -85,16 +85,15 @@ class BinaryTree():
     def inorder_print(self, start, traversal):
         '''Left -> root -> right'''
         if start:
-            traversal = self.preorder_print(start.left, traversal) #writes the left child
+            traversal = self.inorder_print(start.left, traversal) #writes the left child
             traversal += (str(start.value) + "-") #writes the root
-            traversal = self.preorder_print(start.left, traversal) #writes the right child
+            traversal = self.inorder_print(start.right, traversal) #writes the right child
         return traversal
-
     def postorder_print(self, start, traversal):
-        '''Left -> right -> root''' 
+        '''Left -> right -> root'''
         if start:
-            traversal = self.preorder_print(start.left, traversal) #writes the left child
-            traversal = self.preorder_print(start.left, traversal) #writes the right child
+            traversal = self.postorder_print(start.left, traversal) #writes the left child
+            traversal = self.postorder_print(start.right, traversal) #writes the right child
             traversal += (str(start.value) + "-") #writes the root
         return traversal
 
@@ -104,7 +103,7 @@ class BinaryTree():
         but instead of printing the tree,
         it returns the contents of the tree as a list.
 
-        A general programming principle is that a function should return its results 
+        A general programming principle is that a function should return its results
         rather than print them whenever possible.
         If a function returns its results,
         we can always print the returned results if we need to visualize them.
@@ -158,13 +157,13 @@ class BinaryTree():
     def size(self):
         '''
         FIXME:
-        Implement this function. 
+        Implement this function.
         The lecture notes videos provide the exact code you need.
         '''
         if self.root is None:
             return 0
         stack = []
-        stack.push(self.root)
+        stack.append(self.root)
 
         size = 1
 
@@ -172,10 +171,10 @@ class BinaryTree():
             node = stack.pop()
             if node.left:
                 size += 1
-                stack.push(node.left)
+                stack.append(node.left)
             if node.right:
                 size += 1
-                stack.push(node.right)
+                stack.append(node.right)
         return size
 
     def size_(self, node):
@@ -195,7 +194,7 @@ class BinaryTree():
     def _height(node):
         '''
         FIXME:
-        Implement this function. 
+        Implement this function.
 
         The lecture notes videos provide (almost) the exact code you need.
         In the video, the function is not implemented as a static function,
@@ -209,3 +208,5 @@ class BinaryTree():
         right_height = BinaryTree._height(node.right)
 
         return 1 + max(left_height, right_height)
+
+

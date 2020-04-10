@@ -232,7 +232,7 @@ class BST(BinaryTree):
 
             temp_val = node.right
             while temp_val.left:
-            temp_val = temp_val.left
+                temp_val = temp_val.left
 
             node.value = node.right
             node.right = BST._remove(node.right, node.val)

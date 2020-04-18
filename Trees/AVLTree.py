@@ -6,7 +6,7 @@ The functions in this file are considerably harder than the functions in the Bin
 from Trees.BinaryTree import BinaryTree, Node
 from Trees.BST import BST
 
-class AVLTree():
+class AVLTree(BST):
     '''
     FIXME:
     AVLTree is currently not a subclass of BST.
@@ -19,7 +19,11 @@ class AVLTree():
         FIXME:
         Implement this function.
         '''
+        #super().__init__()
+        self.root = None
 
+        if xs:
+            self.insert_list(xs)
 
     def balance_factor(self):
         '''
@@ -45,11 +49,16 @@ class AVLTree():
 
     @staticmethod
     def _is_avl_satisfied(node):
-        '''
+        ''' 
         FIXME:
         Implement this function.
         '''
-
+        
+        if AVLTree._balance_factor(node) == -1 or AVLTree._balance_factor(node) == 0 or AVLTree._balance_factor(node) ==1:
+            return True
+        elif node is None:
+            return True
+        return False
 
     @staticmethod
     def _left_rotate(node):
@@ -62,8 +71,25 @@ class AVLTree():
         The textbook's class hierarchy for their AVL tree code is fairly different from our class hierarchy,
         however, so you will have to adapt their code.
         '''
+        #newRoot = node.right
+        #node.right = newRoot.left #if the new_root had a left child. it becomes the right child of the old node
+        #newRoot.left = node
 
 
+
+        new_node = Node(node.right.value) #the new root
+        new_node.right = node.right.right #what was the grandchild becomes the right child of the  new root
+
+        new_left = Node(node.value) #what was the root becomes the left child of a new root
+        new_left.left = node.left #
+        new_left.right = node.right.left #what was the left of the right child becomes the right of the old root
+
+        new_node.left = new_left
+
+        return new_node        
+        
+        
+        
     @staticmethod
     def _right_rotate(node):
         '''
@@ -75,7 +101,17 @@ class AVLTree():
         The textbook's class hierarchy for their AVL tree code is fairly different from our class hierarchy,
         however, so you will have to adapt their code.
         '''
+        
+        new_node = Node(node.left.value)
+        new_node.left = node.left.left
 
+        new_right = Node(node.value)
+        new_right.right = node.right
+        new_right.left = node.left.right
+
+        new_node.right = new_right
+
+        return new_node
 
     def insert(self, value):
         '''
@@ -92,3 +128,31 @@ class AVLTree():
         The code should look very similar to the code for your insert function for the BST,
         but it will also call the left and right rebalancing functions.
         '''
+
+        if self.root is None:
+            self.root = Node(value)
+        else:
+            self.root = AVLTree._insert(value, self.root)
+
+    def insert_list(self, xs):
+        for x in xs:
+            self.insert(x)
+
+    @staticmethod
+    def _insert(value, node):
+        if value < node.value:
+            if node.left is None:
+                node.left = Node(value)
+            else:
+                AVLTree._insert(value, node.left)
+
+        elif value > node.value:
+            if node.right is None:
+                node.right = Node(value)
+            else:
+                AVLTree._insert(value, node.right)
+
+        else:
+            print("Can't add because value is already in the tree")
+
+  

@@ -53,10 +53,9 @@ class AVLTree(BST):
         FIXME:
         Implement this function.
         '''
-        
-        if AVLTree._balance_factor(node) == -1 or AVLTree._balance_factor(node) == 0 or AVLTree._balance_factor(node) ==1:
+        if node is None:
             return True
-        elif node is None:
+        elif AVLTree._balance_factor(node) == -1 or AVLTree._balance_factor(node) == 0 or AVLTree._balance_factor(node) ==1:
             return True
         return False
 

@@ -3,7 +3,7 @@
 
 from Trees.BinaryTree import BinaryTree, Node
 
-class Heap():
+class Heap(BinaryTree):
     '''
     FIXME:
     Heap is currently not a subclass of BinaryTree.
@@ -17,7 +17,10 @@ class Heap():
         If xs is a list (i.e. xs is not None),
         then each element of xs needs to be inserted into the Heap.
         '''
+        self.root = None
 
+        if xs:
+            self.insert_list(xs)
 
     def __repr__(self):
         '''
@@ -56,7 +59,21 @@ class Heap():
         The lecture videos have the exact code you need,
         except that their method is an instance method when it should have been a static method.
         '''
+        #Check if it's a complete tree
 
+        #if node.left and node.right:
+        #    return True
+        #return False
+
+        #Below I check for if the children are always less or equal to the parents
+        left_valid = True
+        right_valid = True
+
+        if node.left:
+            left_valid = node.value <= node.left.value and Heap._is_heap_satisfied(node.left)
+        if node.right:
+            right_valid = node.value <= node.right.value and Heap._is_heap_satisfied(node.right)
+        return left_valid and right_valid
 
     def insert(self, value):
         '''
@@ -84,7 +101,8 @@ class Heap():
         FIXME:
         Implement this function.
         '''
-
+        for i in xs:
+            self.insert(i)
 
     def find_smallest(self):
         '''

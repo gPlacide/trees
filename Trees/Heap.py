@@ -18,7 +18,7 @@ class Heap(BinaryTree):
         then each element of xs needs to be inserted into the Heap.
         '''
         self.root = None
-
+    
         if xs:
             self.insert_list(xs)
 
@@ -68,6 +68,9 @@ class Heap(BinaryTree):
         #Below I check for if the children are always less or equal to the parents
         left_valid = True
         right_valid = True
+        
+        if node is None:
+            return True
 
         if node.left:
             left_valid = node.value <= node.left.value and Heap._is_heap_satisfied(node.left)
@@ -92,7 +95,31 @@ class Heap(BinaryTree):
         FIXME:
         Implement this function.
         '''
+        node.descendents += 1
 
+        binary = "{0:b}".format(node.descendents)
+
+        if binary[1] == '0':
+            if node.left is None:
+                node.left = Node(value)
+                node.left.descendents = 1
+            else:
+                Heap._insert(value, node.left)
+            
+            if node.value > node.left.value:
+                node.value, node.left.value = node.left.value, node.value
+        
+        elif binary[1] == '1':
+            if node.right is None:
+                node.right = Node(value)
+                node.right.descendents = 1
+            else:
+                Heap._insert(value, node.right)
+
+            if node.value > node.right.value:
+                node.value, node.right.value = node.right.value, node.value
+
+        
 
     def insert_list(self, xs):
         '''
@@ -117,6 +144,7 @@ class Heap(BinaryTree):
         Create a recursive staticmethod helper function,
         similar to how the insert and find functions have recursive helpers.
         '''
+        
         if self.root:
             return self.root.value
 
@@ -128,3 +156,59 @@ class Heap(BinaryTree):
         FIXME:
         Implement this function.
         '''
+        if self.root is None:
+            pass
+        elif self.root and self.root.left is None:
+            self.root = None
+        elif self.root.left is not None:
+            temp = Heap._last_element(self.root)
+            self.root.value = temp
+            if Heap.is_heap_satisfied(self) == False:
+                Heap._swap(self.root)
+
+
+
+    @staticmethod
+    def _last_element(node):
+        '''
+        finds and deletes the last element
+        '''
+        binary = "{0:b}".format(node.descendents)
+
+        node.descendents -=1
+
+        if len(binary) == 2:
+            if binary[1] == '1':
+                temp = node.right
+                node.right = None
+            elif binary[1] == '0':
+                temp = node.left
+                node.left = None
+            return temp.value
+        else:
+            if binary[1] == '0':
+                return Heap._last_element(node.left)
+            elif binary[1] == '1':
+                return Heap._last_element(node.right)
+            
+    @staticmethod
+    def _swap(node):
+
+        if node.left and node.right is None:
+            if node.value > node.left.value:
+                node.value, node.left.value = node.left.value, node.value
+                Heap._swap(node.left)
+        
+        elif node.right and node.left is None:
+            if node.value > node.right.value:
+                node.value, node.right.value = node.right.value, node.value
+                Heap._swap(node.right)
+
+        elif node.left and node.right:
+            if node.value > node.left.value and node.left.value <= node.right.value:
+                node.value, node.left.value = node.left.value, node.value
+                Heap._swap(node.left)
+            
+            elif node.value > node.right.value and node.left.value >= node.right.value:
+                node.value, node.right.value = node.right.value, node.value
+                Heap._swap(node.right)
